@@ -40,8 +40,32 @@ docker exec -it 'db' '/bin/bash'
 psql -U postgres  
 ```
   
-Копируем SQL запрос из файла **solution_1** либо **solution_2**  и нажимаем **Enter** чтобы выполнить его.  
-  
+Первый вариант SQL запроса для решения этой задачи:
+```sql
+UPDATE full_names AS fn
+SET status = sn.status
+FROM short_names AS sn
+WHERE sn.name = split_part(fn.name, '.', 1);
+```
+
+Второй вариант SQL запроса для решения этой задачи, похож на первый, но с использованием CTE:
+```sql
+WITH matched_names AS (
+    SELECT
+        fn.name AS full_name,
+        sn.status AS status
+    FROM
+        full_names AS fn
+    JOIN
+        short_names AS sn
+    ON
+        sn.name = split_part(fn.name, '.', 1)
+)
+UPDATE full_names AS fn
+SET status = mn.status
+FROM matched_names AS mn
+WHERE fn.name = mn.full_name;
+```
 Для того чтобы очистить данные достаточно сделать:  
 ```bash
 docker-compose down  
