@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
+
 from api import router
 
 app = FastAPI(title="Task 1")
